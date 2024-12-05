@@ -2,16 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {Ticket, TicketSchema} from "@/entities/Ticket/model/types/types";
 
 const initialState: TicketSchema = {
-    tickets: [
-        {
-            firstName: "First",
-            lastName: "Last",
-            description: "decs",
-            _id: "1",
-            resolved: false,
-            email: "mail@mail.com",
-        }
-    ],
+    tickets: [],
 };
 
 export const ticketSlice = createSlice({
@@ -23,6 +14,9 @@ export const ticketSlice = createSlice({
         },
         addTicket: (state, action: PayloadAction<Ticket>) => {
             state.tickets.push(action.payload);
+        },
+        deleteTicket: (state, action: PayloadAction<string>) => {
+            state.tickets = state.tickets.filter(el => el._id !== action.payload);
         },
         updateTicket: (state, action: PayloadAction<Ticket>) => {
             state.tickets = state.tickets.map((prompt) =>

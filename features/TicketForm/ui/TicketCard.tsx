@@ -7,6 +7,9 @@ import {useSelector} from "react-redux";
 import {useAppDispatch} from "@/shared/lib/hooks/useAppDispatch";
 import {fetchTicketById} from "@/features/TicketForm/service/fetchTicketById";
 import {getTicket} from "@/features/TicketForm/model/selectors/selectors";
+import {useDeleteTicket, useUpdateTicket} from "@/features/TicketForm/api/ticketFormApi";
+import {ticketActions} from "@/entities/Ticket";
+import {useRouter} from "next/navigation";
 
 interface TicketCardProps {
     ticketId: string;
@@ -14,7 +17,9 @@ interface TicketCardProps {
 
 export const TicketCard = ({ ticketId }: TicketCardProps) => {
     const dispatch = useAppDispatch();
-    const ticket = useSelector(getTicket)
+    const ticket = useSelector(getTicket);
+    const router = useRouter();
+    const [deleteTicketMutation, { isLoading: isDeleteLoading }] = useDeleteTicket();
 
     useEffect(() => {
         if (ticketId) {
@@ -24,6 +29,12 @@ export const TicketCard = ({ ticketId }: TicketCardProps) => {
 
     if (!ticket) {
         return <div>No Ticket</div>
+    }
+
+    const onDelete = async () => {
+        await deleteTicketMutation(ticketId);
+        dispatch(ticketActions.deleteTicket(ticketId));
+        router.push("/list");
     }
 
     return (
@@ -45,12 +56,17 @@ export const TicketCard = ({ ticketId }: TicketCardProps) => {
                 <p>{ticket.email}</p>
             </div>
             <div>
+                <p className="text-gray-400 text-sm">Symptom</p>
+                <p>{ticket.symptom}</p>
+            </div>
+            <div>
                 <p className="text-gray-400 text-sm">Resolved</p>
                 <p>{ticket.resolved ? "True" : "False"}</p>
             </div>
             <Link className="absolute right-4" href={`/update/${ticket._id}`}>
                 <Image src={EditIcon} alt={"edit"}></Image>
             </Link>
+            <button className="absolute right-14" onClick={onDelete}>Delete</button>
         </div>
     );
 };

@@ -17,10 +17,10 @@ interface TicketFormProps {
 
 export const TicketForm = ({ ticketId, type }: TicketFormProps) => {
     const dispatch = useAppDispatch();
-    const { firstName, lastName, email, resolved, description } = useSelector(getForm);
+    const { firstName, lastName, email, resolved, description, symptom } = useSelector(getForm);
     const router = useRouter();
-    const [updateTicketMutation, { isLoading: isUpdateLoading }] = useUpdateTicket();
-    const [createTicketMutation, { isLoading: isCreateLoading }] = useCreateTicket();
+    const [updateTicketMutation, { isLoading: isUpdateLoading, error: isUpdateError }] = useUpdateTicket();
+    const [createTicketMutation, { isLoading: isCreateLoading, error: isCreateError }] = useCreateTicket();
     const submitText = type === TicketFormType.CREATE ? "Create" : "Edit";
 
     const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +34,9 @@ export const TicketForm = ({ ticketId, type }: TicketFormProps) => {
     };
     const onChangeDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
         dispatch(ticketFormActions.setForm({ description: e.target.value }));
+    };
+    const onChangeSymptom = (e: ChangeEvent<HTMLSelectElement>) => {
+        dispatch(ticketFormActions.setForm({ symptom: e.target.value }));
     };
     const onChangeResolved = (e: ChangeEvent<HTMLInputElement>) => {
         dispatch(ticketFormActions.setForm({ resolved: e.target.value }));
@@ -57,38 +60,26 @@ export const TicketForm = ({ ticketId, type }: TicketFormProps) => {
                     lastName,
                     email,
                     description,
+                    symptom,
                     resolved
                 });
-                dispatch(ticketActions.updateTicket({
-                    _id: ticketId,
-                    firstName,
-                    lastName,
-                    email,
-                    description,
-                    resolved
-                }))
             } else {
                 await createTicketMutation({
                     firstName,
                     lastName,
                     email,
                     description,
+                    symptom,
                     resolved
                 });
-                dispatch(ticketActions.addTicket({
-                    _id: Date.now().toString(),
-                    firstName,
-                    lastName,
-                    email,
-                    description,
-                    resolved
-                }))
+            }
+            if (!isCreateError || !isUpdateError) {
+                router.push("/list");
+                dispatch(ticketFormActions.setForm({ promptText: "", tag: "" }));
             }
         } catch (e) {
             console.log(e);
         } finally {
-            dispatch(ticketFormActions.setForm({ promptText: "", tag: "" }));
-            router.push("/list");
         }
     };
 
@@ -108,15 +99,26 @@ export const TicketForm = ({ ticketId, type }: TicketFormProps) => {
                     <input value={email} className="p-1 rounded" required onChange={onChangeEmail} type="email"/>
                 </label>
                 <label className="flex flex-col" htmlFor="">
-                    <span className="text-gray-400 text-sm">Desc</span>
-                    <textarea value={description} className="p-1 rounded" required onChange={onChangeDescription}></textarea>
+                    <span className="text-gray-400 text-sm">Description</span>
+                    <textarea value={description} className="p-1 rounded" required
+                              onChange={onChangeDescription}></textarea>
+                </label>
+                <label className="flex flex-col" htmlFor="">
+                    <span className="text-gray-400 text-sm">Symptom</span>
+                    <select className="p-2" value={symptom} onChange={onChangeSymptom}>
+                        <option value="Issues with email">Issues with email</option>
+                        <option value="Issues with website">Issues with website</option>
+                        <option value="Error">Error</option>
+                    </select>
                 </label>
                 <label className="flex flex-col" htmlFor="">
                     <span className="text-gray-400 text-sm">Resolved</span>
                     <span className="text-gray-400 text-sm">False/True</span>
                     <span className="flex flex-row gap-2">
-                        <input value={0} onChange={onChangeResolved} required checked={Number(resolved) === 0} type="radio"/>
-                        <input value={1} onChange={onChangeResolved} required checked={Number(resolved) === 1} type="radio"/>
+                        <input value={0} onChange={onChangeResolved} required checked={Number(resolved) === 0}
+                               type="radio"/>
+                        <input value={1} onChange={onChangeResolved} required checked={Number(resolved) === 1}
+                               type="radio"/>
                     </span>
                 </label>
                 <button

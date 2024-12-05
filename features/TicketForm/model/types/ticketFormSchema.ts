@@ -7,6 +7,7 @@ export interface TicketFormSchema {
         email: string;
         description: string;
         resolved: boolean;
+        symptom: string;
     };
     ticket: Ticket | null;
     isLoading: boolean;

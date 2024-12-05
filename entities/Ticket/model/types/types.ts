@@ -5,6 +5,7 @@ export interface Ticket {
     email: string;
     description: string;
     resolved: boolean;
+    symptom: string;
 }
 
 export interface TicketSchema {

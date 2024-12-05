@@ -9,6 +9,7 @@ const initialState: TicketFormSchema = {
         lastName: "",
         email: "",
         description: "",
+        symptom: "Issues with email",
         resolved: false
     },
     ticket: null,
