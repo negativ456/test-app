@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Page = () => {
     return (
@@ -13,7 +13,7 @@ const Page = () => {
             </p>
             <h2>Customizable and Optimized for All Devices</h2>
             <p>
-                We understand that every organization has unique needs. Our app is highly customizable, allowing you to add more columns, apply formatting rules, and leverage a wide range of AppSheet features. Whether you're on a smartphone, tablet, or desktop, our app is optimized for all devices, ensuring a seamless experience across different screen sizes and platforms. Get started today to transform the way your organization handles IT requests and manage issues efficiently from your mobile device.
+                We understand that every organization has unique needs. Our app is highly customizable, allowing you to add more columns, apply formatting rules, and leverage a wide range of AppSheet features. Whether you re on a smartphone, tablet, or desktop, our app is optimized for all devices, ensuring a seamless experience across different screen sizes and platforms. Get started today to transform the way your organization handles IT requests and manage issues efficiently from your mobile device.
             </p>
         </div>
     );
