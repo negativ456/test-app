@@ -5,12 +5,16 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --input: #aaaaaa;
+  --ticket-hover: #aaaaaa;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --input: #171717;
+    --ticket-hover: #171717;
   }
 }
 
@@ -18,4 +22,22 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+input, textarea {
+  background: var(--input);
+  color: var(--foreground);
+  outline: none;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+textarea {
+  resize: none;
+}
+
+.ticket:hover {
+  background: var(--ticket-hover);
 }
